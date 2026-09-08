@@ -1,0 +1,13 @@
+#!/bin/bash
+
+polybar -r &
+# $HOME/.local/share/ABDownloadManager/bin/ABDownloadManager &
+feh --bg-fill "/home/eric/Pictures/Wallpaper/360671.png" &
+
+# Battery
+batsignal -b &
+
+# Systray
+nm-applet &
+python3 $HOME/.config/qtile/batteryLimit.py &
+xfce4-clipman &

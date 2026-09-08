@@ -1,0 +1,6 @@
+require("plugins.init")
+require("set")
+require("remap")
+require("lsp")
+require("statusline")
+require("au")

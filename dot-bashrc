@@ -1,0 +1,112 @@
+#!/usr/bin/sh
+
+# non colorized PS1
+# PS1='\u@\h [\W]\\$ '
+
+# colorized PS1
+PS1="\[\033[1;32m\]\u@\h \[\033[0;37m\][\[\033[0;34m\]\W\[\033[0;37m\]]\\$ "
+
+if ! shopt -oq posix ; then
+	if [ -f /usr/share/bash-completion/bash-completion ]; then
+		. /usr/share/bash-completion/bash-completion
+	elif [ -f /etc/bash_completion ]; then
+		. /etc/bash_completion
+	fi
+fi
+
+. /usr/lib/mc/mc.sh
+. "/home/eric/.deno/env"
+
+source /home/eric/.local/share/bash-completion/completions/deno.bash
+
+export CDPATH=.:/usr/share/doc:~:~/Desktop:~
+export EDITOR=vim
+export NVM_DIR="$HOME/.nvm"
+export BUN_INSTALL="$HOME/.bun"
+
+nvm() {
+	unset -f nvm node npm npx 
+	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+	[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+	nvm "$@"
+}
+node() {
+	unset -f nvm node npm npx 
+	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+	[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+	node "$@"
+}
+npm() {
+	unset -f nvm node npm npx 
+	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+	[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+	npm "$@"
+}
+npx() {
+	unset -f nvm node npm npx 
+	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+	[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+	npx "$@"
+}
+
+###-begin-flutter-completion-###
+if type complete &>/dev/null; then
+  __flutter_completion() {
+    local si="$IFS"
+    IFS=$'\n' COMPREPLY=($(COMP_CWORD="$COMP_CWORD" \
+                           COMP_LINE="$COMP_LINE" \
+                           COMP_POINT="$COMP_POINT" \
+                           flutter completion -- "${COMP_WORDS[@]}" \
+                           2>/dev/null)) || return $?
+    IFS="$si"
+  }
+  complete -F __flutter_completion flutter
+elif type compdef &>/dev/null; then
+  __flutter_completion() {
+    si=$IFS
+    compadd -- $(COMP_CWORD=$((CURRENT-1)) \
+                 COMP_LINE=$BUFFER \
+                 COMP_POINT=0 \
+                 flutter completion -- "${words[@]}" \
+                 2>/dev/null)
+    IFS=$si
+  }
+  compdef __flutter_completion flutter
+elif type compctl &>/dev/null; then
+  __flutter_completion() {
+    local cword line point words si
+    read -Ac words
+    read -cn cword
+    let cword-=1
+    read -l line
+    read -ln point
+    si="$IFS"
+    IFS=$'\n' reply=($(COMP_CWORD="$cword" \
+                       COMP_LINE="$line" \
+                       COMP_POINT="$point" \
+                       flutter completion -- "${words[@]}" \
+                       2>/dev/null)) || return $?
+    IFS="$si"
+  }
+  compctl -K __flutter_completion flutter
+fi
+
+###-end-flutter-completion-###
+## Generated 2026-08-04 09:18:42.452171Z
+## By /home/eric/flutter/bin/cache/flutter_tools.snapshotexport PATH="$HOME/cmdline-tools/bin:$PATH"
+
+# alias
+alias ..="cd .."
+alias ls='ls --color=tty'
+alias l="ls -lah"
+alias ll="ls -lh"
+
+# PATH
+export PATH="${PATH+$PATH:}/usr/sbin:/sbin"
+export PATH="/opt/nvim-linux-x86_64/bin:$PATH"
+export PATH="$BUN_INSTALL/bin:$PATH"
+export PATH='/home/eric/.local/bin':$PATH
+export PATH="$HOME/flutter/bin:$PATH"
+export PATH="$HOME/cmdline-tools/bin:$PATH"
+export PATH="$HOME/.nvm/versions/node/v$(ls $HOME/.nvm/versions/node/ | tail -n 1)/bin:$PATH"
+
